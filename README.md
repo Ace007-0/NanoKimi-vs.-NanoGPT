@@ -9,26 +9,36 @@ The code trains both models, measures key metrics, and visualizes results in a c
 ## Setup Instructions
 
 1). Prerequisites
+
 Python 3.8+
+
 PyTorch (torch)
+
 NumPy (numpy)
+
 Matplotlib (matplotlib)
+
 psutil (psutil)
+
 A text file named input.txt containing the training dataset, which is provided in dataset floder.
+
 CUDA-enabled GPU (optional, falls back to CPU if unavailable)
 
 2). Installation
 
 1. Clone the repository:
+
 git clone <repository-url>
 cd <repository-directory>
 
 2. Install dependencies:
+   
 pip install torch numpy matplotlib psutil
 
 3. Ensure input.txt is in the project directory with sufficient text data for training.
 
 3). Running the Code
+
 Execute the script to train both models and generate the comparison graph:
 python model_comparison.py
 The script outputs training progress, final metrics, and saves a visualization to comparison_graph.png.
