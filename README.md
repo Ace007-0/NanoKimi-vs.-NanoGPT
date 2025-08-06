@@ -96,11 +96,10 @@ NanoKimi K2 (referred to as NanoKimi in the code) is designed to leverage the Mu
 1). Mixture of Experts (MoE) Architecture
 Structure: Each transformer block in NanoKimi replaces the standard feedforward layer with an MoELayer containing 4 experts. A gating network (self.gate) computes softmax scores to weight expert outputs dynamically.
 
-
-
 Implementation:
 
 class MoELayer(nn.Module):
+
     def __init__(self, dim, num_experts=4):
         super().__init__()
         self.experts = nn.ModuleList([Expert(dim) for _ in range(num_experts)])
@@ -183,13 +182,14 @@ Implementation:
 ## Results
 
 The comparison results highlight NanoKimi’s advantages and trade-offs:
-    1. Validation Loss: NanoKimi (1.6756) outperforms NanoGPT (1.7285), indicating better language modeling accuracy.
-    2. Perplexity: NanoKimi (5.34) vs. NanoGPT (5.63), reflecting Muon’s role in achieving better predictions.
-    3. Training Time: NanoKimi (0.1264s) is ~2.5x slower than NanoGPT (0.0508s) due to Muon’s computations and MoE complexity.
-    4. Inference Time: NanoKimi (0.0081s) is ~1.35x slower than NanoGPT (0.0060s).
-    5. Memory Usage: NanoKimi (0.01 MB) uses less memory than NanoGPT (0.03 MB), benefiting from MoE’s sparse activation.
-    6. Parameter Efficiency: NanoKimi (19.21) is less efficient than NanoGPT (26.85) due to higher parameter count.
-    7. Parameter Count: NanoKimi (0.28M) vs. NanoGPT (0.21M).
+
+   1. Validation Loss: NanoKimi (1.6756) outperforms NanoGPT (1.7285), indicating better language modeling accuracy.
+   2. Perplexity: NanoKimi (5.34) vs. NanoGPT (5.63), reflecting Muon’s role in achieving better predictions.
+   3. Training Time: NanoKimi (0.1264s) is ~2.5x slower than NanoGPT (0.0508s) due to Muon’s computations and MoE complexity.
+   4. Inference Time: NanoKimi (0.0081s) is ~1.35x slower than NanoGPT (0.0060s).
+   5. Memory Usage: NanoKimi (0.01 MB) uses less memory than NanoGPT (0.03 MB), benefiting from MoE’s sparse activation.
+   6. Parameter Efficiency: NanoKimi (19.21) is less efficient than NanoGPT (26.85) due to higher parameter count.
+   7. Parameter Count: NanoKimi (0.28M) vs. NanoGPT (0.21M).
 
 * Key Insight: The Muon optimizer enables NanoKimi to achieve superior performance (lower loss/perplexity) by stabilizing MoE training, but at the cost of slower training and inference. Lower memory usage makes NanoKimi suitable for resource-constrained settings.
 -----
