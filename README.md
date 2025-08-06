@@ -115,40 +115,56 @@ class MoELayer(nn.Module):
 
 Benefit: MoE allows NanoKimi to specialize computations across experts, improving modeling capacity and achieving lower validation loss compared to NanoGPT’s feedforward layers.
 
-2). Muon Optimizer
-Purpose: The TrueMuon optimizer applies directional updates using matrix_sign to stabilize training for high-dimensional parameters in NanoKimi’s MoE and attention layers.
+2). Muon Optimizer(TrueMuon optimizer)
+TrueMuon optimizer, a custom optimizer designed for stabilizing training of high-dimensional hidden layers in transformer models like NanoKimi. It uses a matrix_sign function to compute directional gradient updates, enhancing convergence for Mixture of Experts (MoE) layers. The build_optimizers function splits model parameters, applying TrueMuon to 2D hidden layers within transformer blocks and AdamW to others, balancing performance and efficiency. This enables NanoKimi to achieve lower validation loss (1.6756 vs. NanoGPT’s 1.7285) at the cost of slower training (0.1264s vs. 0.0508s).
 
 Implementation:
 
-        class TrueMuon(torch.optim.Optimizer):
-          def __init__(self, params, lr=1e-2, beta=0.9, weight_decay=0.01):
+        def matrix_sign(G, steps=5, eps=1e-7):
+           assert G.ndim == 2
+          a, b, c = 3.4445, -4.7750, 2.0315
+          X = G / (G.norm() + eps)
+          if G.size(0) > G.size(1):
+              X = X.T
+          for _ in range(steps):
+              A = X @ X.T
+              B = b * A + c * (A @ A)
+              X = a * X + B @ X
+          if G.size(0) > G.size(1):
+              X = X.T
+          return X
+         class TrueMuon(torch.optim.Optimizer):
+            def __init__(self, params, lr=1e-2, beta=0.9, weight_decay=0.01):
               defaults = dict(lr=lr, beta=beta, weight_decay=weight_decay)
               super().__init__(params, defaults)
-         @torch.no_grad()
-         def step(self, closure=None):
-              loss = closure() if closure else None
-              for group in self.param_groups:
-                  beta = group['beta']
-                  lr = group['lr']
-                  wd = group['weight_decay']
-                  for p in group['params']:
-                      if p.grad is None or p.grad.ndim < 2:
-                          continue
-                      grad = p.grad
-                      state = self.state[p]
-                      if 'momentum' not in state:
-                          state['momentum'] = torch.zeros_like(p)
-                      m = state['momentum']
-                      m.mul_(beta).add_(grad, alpha=(1-beta))
-                      X = beta * m + grad
-                      O = matrix_sign(X)
-                      if wd != 0:
-                          O = O.add(p, alpha=wd)
-                      p.add_(O, alpha=-lr)
-              return loss
 
-
-
+            @torch.no_grad()
+            def step(self, closure=None):
+                 loss = closure() if closure else None
+                 for group in self.param_groups:
+                     beta = group['beta']; lr = group['lr']; wd = group['weight_decay']
+                     for p in group['params']:
+                         if p.grad is None or p.grad.ndim < 2:
+                             continue
+                         grad = p.grad
+                         state = self.state[p]
+                         if 'momentum' not in state:
+                             state['momentum'] = torch.zeros_like(p)
+                         m = state['momentum']
+                         m.mul_(beta).add_(grad, alpha=(1-beta))
+                         X = beta * m + grad
+                         O = matrix_sign(X)
+                         if wd != 0:
+                             O = O.add(p, alpha=wd)
+                         p.add_(O, alpha=-lr)
+               return loss
+         def build_optimizers(model):
+             hidden = [p for n, p in model.named_parameters() if p.ndim >= 2 and 'blocks' in n]
+             hidden_ids = set(id(p) for p in hidden)
+             others = [p for n, p in model.named_parameters() if id(p) not in hidden_ids]
+             adamw = torch.optim.AdamW(others, lr=learning_rate)
+             muon = TrueMuon(hidden, lr=1e-2, beta=0.9, weight_decay=0.01)
+             return adamw, muon
 
 3). Advantages:
 
