@@ -120,26 +120,33 @@ Purpose: The TrueMuon optimizer applies directional updates using matrix_sign to
 
 Implementation:
 
-class TrueMuon(torch.optim.Optimizer):
-    def __init__(self, params, lr=1e-2, beta=0.9, weight_decay=0.01):
-        defaults = dict(lr=lr, beta=beta, weight_decay=weight_decay)
-        super().__init__(params, defaults)
-    def step(self, closure=None):
-        for group in self.param_groups:
-            for p in group['params']:
-                if p.grad is None or p.grad.ndim < 2:
-                    continue
-                grad = p.grad
-                state = self.state[p]
-                if 'momentum' not in state:
-                    state['momentum'] = torch.zeros_like(p)
-                m = state['momentum']
-                m.mul_(beta).add_(grad, alpha=(1-beta))
-                X = beta * m + grad
-                O = matrix_sign(X)
-                if wd != 0:
-                    O = O.add(p, alpha=wd)
-                p.add_(O, alpha=-lr)
+        class TrueMuon(torch.optim.Optimizer):
+          def __init__(self, params, lr=1e-2, beta=0.9, weight_decay=0.01):
+              defaults = dict(lr=lr, beta=beta, weight_decay=weight_decay)
+              super().__init__(params, defaults)
+         @torch.no_grad()
+         def step(self, closure=None):
+              loss = closure() if closure else None
+              for group in self.param_groups:
+                  beta = group['beta']
+                  lr = group['lr']
+                  wd = group['weight_decay']
+                  for p in group['params']:
+                      if p.grad is None or p.grad.ndim < 2:
+                          continue
+                      grad = p.grad
+                      state = self.state[p]
+                      if 'momentum' not in state:
+                          state['momentum'] = torch.zeros_like(p)
+                      m = state['momentum']
+                      m.mul_(beta).add_(grad, alpha=(1-beta))
+                      X = beta * m + grad
+                      O = matrix_sign(X)
+                      if wd != 0:
+                          O = O.add(p, alpha=wd)
+                      p.add_(O, alpha=-lr)
+              return loss
+
 
 
 
