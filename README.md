@@ -1,4 +1,4 @@
-# NanoKimi-vs.-NanoGPT
+# NanoKimi vs NanoGPT
 
 ## Overview
 
