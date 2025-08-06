@@ -4,7 +4,7 @@
 
 This project compares two transformer-based language models, NanoKimi and NanoGPT, to evaluate the advantages of the Muon optimizer used in NanoKimi against the standard AdamW optimizer used in NanoGPT. NanoKimi incorporates a Mixture of Experts (MoE) architecture, optimized with Muon for its hidden layers, while NanoGPT uses a simpler feedforward architecture with AdamW. The comparison focuses on performance (validation loss, perplexity), training/inference speed, memory usage, and parameter efficiency, using a character-level language modeling task on a provided text dataset (input.txt).
 
-The code trains both models, measures key metrics, and visualizes results in a comparison graph (comparison_graph.png). The results highlight NanoKimi’s superior performance due to the Muon optimizer and MoE, at the cost of slower training and inference times.
+The code trains both models, measures key metrics, and visualizes results in a comparison graph (comparison_graph.png). The results highlight NanoKimi’s superior performance due to the Muon optimizer and MoE.
 -------
 ## Setup Instructions
 
