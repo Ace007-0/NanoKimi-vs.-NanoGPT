@@ -4,10 +4,10 @@
 This project compares two transformer-based language models, NanoKimi and NanoGPT, to evaluate the advantages of the Muon optimizer used in NanoKimi against the standard AdamW optimizer used in NanoGPT. NanoKimi incorporates a Mixture of Experts (MoE) architecture, optimized with Muon for its hidden layers, while NanoGPT uses a simpler feedforward architecture with AdamW. The comparison focuses on performance (validation loss, perplexity), training/inference speed, memory usage, and parameter efficiency, using a character-level language modeling task on a provided text dataset (input.txt).
 
 The code trains both models, measures key metrics, and visualizes results in a comparison graph (comparison_graph.png). The results highlight NanoKimi’s superior performance due to the Muon optimizer and MoE, at the cost of slower training and inference times.
+-------
+## Setup Instructions
 
-Setup Instructions
-
-Prerequisites
+1). Prerequisites
 Python 3.8+
 PyTorch (torch)
 NumPy (numpy)
@@ -16,7 +16,7 @@ psutil (psutil)
 A text file named input.txt containing the training dataset, which is provided in dataset floder.
 CUDA-enabled GPU (optional, falls back to CPU if unavailable)
 
-Installation
+2). Installation
 
 1. Clone the repository:
 git clone <repository-url>
@@ -27,12 +27,12 @@ pip install torch numpy matplotlib psutil
 
 3. Ensure input.txt is in the project directory with sufficient text data for training.
 
-Running the Code
+3). Running the Code
 Execute the script to train both models and generate the comparison graph:
 python model_comparison.py
 The script outputs training progress, final metrics, and saves a visualization to comparison_graph.png.
-
-Code Structure
+------
+## Code Structure
 
 The code is organized into the following components:
 1). Data Loading and Preprocessing:
@@ -63,7 +63,7 @@ Generates bar plots comparing validation loss, training time, memory usage, and 
 <img width="1016" height="375" alt="image" src="https://github.com/user-attachments/assets/76ca595c-8c85-4004-9257-1a298de65049" />
 <img width="800" height="1200" alt="comparison_graph" src="https://github.com/user-attachments/assets/f96e95e9-e93f-444c-ada0-c2b65365ee50" />
 
-
+------
 ## NanoKimi K2: Design and Advantages
 NanoKimi K2 (referred to as NanoKimi in the code) is designed to leverage the Muon optimizer and Mixture of Experts (MoE) architecture for enhanced performance in language modeling. Key features include:
 
@@ -128,7 +128,7 @@ Layers: 4 (n_layer)
 Heads: 4 (n_head)
 Experts: 4 (num_experts)
 Parameter Count: 0.28M, higher than NanoGPT’s 0.21M due to MoE layers.
-
+----
 ## Results
 
 The comparison results highlight NanoKimi’s advantages and trade-offs:
@@ -141,27 +141,11 @@ The comparison results highlight NanoKimi’s advantages and trade-offs:
     7. Parameter Count: NanoKimi (0.28M) vs. NanoGPT (0.21M).
 
 * Key Insight: The Muon optimizer enables NanoKimi to achieve superior performance (lower loss/perplexity) by stabilizing MoE training, but at the cost of slower training and inference. Lower memory usage makes NanoKimi suitable for resource-constrained settings.
-
-## Usage
-
-
-
-
-
-Prepare Data: Place your text dataset in input.txt.
-
-
-
-Train Models: Run python model_comparison.py to train NanoKimi and NanoGPT, generating metrics and comparison_graph.png.
-
-
-
-Analyze Results: Review the console output for training progress and final metrics, and check comparison_graph.png for visualized comparisons.
-
+-----
 ## Limitations and Future Work
 
 1. Enhancements: Add top-k gating to MoELayer for faster computation and expert pruning for dynamic parameter reduction.
 2. Resource Limitation: Due to computational constraints (e.g., limited GPU memory and processing power), the model could not be developed to run at full capacity. This restricted the scale of NanoKimi’s Mixture of Experts (MoE) architecture and the number of training iterations, potentially limiting its performance
 Contributing
-
+----
 Contributions are welcome! Please submit issues or pull requests for bug fixes, optimizations, or additional features.
