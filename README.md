@@ -98,17 +98,19 @@ Structure: Each transformer block in NanoKimi replaces the standard feedforward 
 
 Implementation:
 
-class MoELayer(nn.Module):
+   class MoELayer(nn.Module):
 
-    def __init__(self, dim, num_experts=4):
-        super().__init__()
-        self.experts = nn.ModuleList([Expert(dim) for _ in range(num_experts)])
-        self.gate = nn.Linear(dim, num_experts)
-    def forward(self, x):
-        scores = F.softmax(self.gate(x), dim=-1)
-        expert_outs = torch.stack([e(x) for e in self.experts], dim=-1)
-        scores = scores.unsqueeze(-2)
-        return (expert_outs * scores).sum(-1)
+   
+    class MoELayer(nn.Module):
+      def __init__(self, dim, num_experts=4):
+           super().__init__()
+           self.experts = nn.ModuleList([Expert(dim) for _ in range(num_experts)])
+           self.gate = nn.Linear(dim, num_experts)
+       def forward(self, x):
+           scores = F.softmax(self.gate(x), dim=-1)
+           expert_outs = torch.stack([e(x) for e in self.experts], dim=-1)
+           scores = scores.unsqueeze(-2)
+           return (expert_outs * scores).sum(-1)
 
 
 
