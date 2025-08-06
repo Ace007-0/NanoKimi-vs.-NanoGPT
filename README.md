@@ -28,12 +28,12 @@ CUDA-enabled GPU (optional, falls back to CPU if unavailable)
 
 1. Clone the repository:
 
-git clone <repository-url>
-cd <repository-directory>
+   git clone <repository-url>
+   cd <repository-directory>
 
 2. Install dependencies:
    
-pip install torch numpy matplotlib psutil
+   pip install torch numpy matplotlib psutil
 
 3. Ensure input.txt is in the project directory with sufficient text data for training.
 
