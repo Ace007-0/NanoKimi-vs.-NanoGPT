@@ -50,37 +50,47 @@ The code is organized into the following components:
 
 1). Data Loading and Preprocessing:
 
-    1. Loads input.txt and creates a character-level vocabulary.
+   1. Loads input.txt and creates a character-level vocabulary.
     
-    2. Splits data into 90% training and 10% validation sets.
+   2. Splits data into 90% training and 10% validation sets.
     
-    3. Implements get_batch for generating input-target pairs.
+   3. Implements get_batch for generating input-target pairs.
 
 
 
 2). Model Architecture:
-    1. NanoGPT: Standard transformer with multi-head self-attention and feedforward layers, optimized with AdamW.
-    2. NanoKimi: Transformer with MoE layers (4 experts) and multi-head self-attention, using Muon for hidden layers and AdamW for others.
-    3. Shared components: SwiGLU activation, Head, MultiHeadAttention, Block, and LanguageModel classes.
+
+   1. NanoGPT: Standard transformer with multi-head self-attention and feedforward layers, optimized with AdamW.
+    
+   2. NanoKimi: Transformer with MoE layers (4 experts) and multi-head self-attention, using Muon for hidden layers and AdamW for others.
+    
+   3. Shared components: SwiGLU activation, Head, MultiHeadAttention, Block, and LanguageModel classes.
 
 
 
 3). Muon Optimizer:
+
 Custom TrueMuon optimizer with matrix_sign for directional gradient updates, applied to NanoKimi’s hidden layers.
 
 4). Training and Evaluation:
-    1. Trains both models for 10,000 iterations, computing validation loss every 100 iterations.
-    2. Measures training time, inference time, memory usage, and parameter efficiency.
+
+   1. Trains both models for 10,000 iterations, computing validation loss every 100 iterations.
+      
+   2. Measures training time, inference time, memory usage, and parameter efficiency.
 
 
 
 Visualization(Output):
+
 Generates bar plots comparing validation loss, training time, memory usage, and inference time.
+
 <img width="1016" height="375" alt="image" src="https://github.com/user-attachments/assets/76ca595c-8c85-4004-9257-1a298de65049" />
+
 <img width="800" height="1200" alt="comparison_graph" src="https://github.com/user-attachments/assets/f96e95e9-e93f-444c-ada0-c2b65365ee50" />
 
 ------
 ## NanoKimi K2: Design and Advantages
+
 NanoKimi K2 (referred to as NanoKimi in the code) is designed to leverage the Muon optimizer and Mixture of Experts (MoE) architecture for enhanced performance in language modeling. Key features include:
 
 1). Mixture of Experts (MoE) Architecture
@@ -134,16 +144,18 @@ class TrueMuon(torch.optim.Optimizer):
 
 
 3). Advantages:
-Improved Convergence: Muon’s directional updates stabilize training for MoE layers, leading to lower validation loss (1.6756 vs. 1.7285).
-Sparse Optimization: Well-suited for MoE’s sparse gradients, enhancing performance over AdamW.
-Trade-off: Increased computational cost due to matrix_sign (5 matrix operations), resulting in slower training (0.1264s vs. 0.0508s).
+
+   1. Improved Convergence: Muon’s directional updates stabilize training for MoE layers, leading to lower validation loss (1.6756 vs. 1.7285).
+   2. Sparse Optimization: Well-suited for MoE’s sparse gradients, enhancing performance over AdamW.
+   3. Trade-off: Increased computational cost due to matrix_sign (5 matrix operations), resulting in slower training (0.1264s vs. 0.0508s).
 
 4). Key Parameters
-Embedding Dimension: 64 (n_embd)
-Layers: 4 (n_layer)
-Heads: 4 (n_head)
-Experts: 4 (num_experts)
-Parameter Count: 0.28M, higher than NanoGPT’s 0.21M due to MoE layers.
+
+   1. Embedding Dimension: 64 (n_embd)
+   2. Layers: 4 (n_layer)
+   3.  Heads: 4 (n_head)
+   4.  Experts: 4 (num_experts)
+   5.  Parameter Count: 0.28M, higher than NanoGPT’s 0.21M due to MoE layers.
 ----
 ## Results
 
