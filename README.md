@@ -13,6 +13,7 @@ The code trains both models, measures key metrics, and visualizes results in a c
 - Matplotlib (`matplotlib`)
 - psutil (`psutil`)
 - A text file named `input.txt` containing the training dataset, placed in the project root
+- Jupyter environment (e.g., Jupyter Notebook or Google Colab)
 - CUDA-enabled GPU (optional, falls back to CPU if unavailable)
 
 ### Installation
@@ -23,13 +24,14 @@ The code trains both models, measures key metrics, and visualizes results in a c
    ```
 2. Install dependencies:
    ```bash
-   pip install torch numpy matplotlib psutil
+   pip install torch numpy matplotlib psutil jupyter
    ```
 3. Place `input.txt` in the project root with sufficient text data for training.
 
 ### Running the Code
-Execute the script to train both models and generate the comparison graph:
+Open `model_comparison.py.ipynb` in a Jupyter environment (e.g., Jupyter Notebook or Google Colab) and run all cells to train both models and generate `comparison_graph.png`. Alternatively, convert the notebook to a Python script and run it:
 ```bash
+jupyter nbconvert --to script model_comparison.py.ipynb
 python model_comparison.py
 ```
 The script outputs training progress, final metrics, and saves a visualization to `comparison_graph.png`.
@@ -160,7 +162,7 @@ The comparison results highlight NanoKimi’s advantages and trade-offs:
 
 ## Usage
 1. **Prepare Data**: Place a text dataset in `input.txt` in the project root.
-2. **Train Models**: Run `python model_comparison.py` to train NanoKimi and NanoGPT, generating metrics and `comparison_graph.png`.
+2. **Train Models**: Open `model_comparison.py.ipynb` in Jupyter Notebook or Google Colab and run all cells to train NanoKimi and NanoGPT, generating metrics and `comparison_graph.png`. Alternatively, convert to a script and run `python model_comparison.py`.
 3. **Analyze Results**: Review console output for training progress and final metrics. Visualize comparisons in `comparison_graph.png`.
 
 ## Limitations and Future Work
@@ -169,3 +171,4 @@ The comparison results highlight NanoKimi’s advantages and trade-offs:
 
 ## Contributing
 Contributions are welcome! Please submit issues or pull requests for bug fixes, optimizations, or additional features.
+
