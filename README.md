@@ -28,9 +28,9 @@ CUDA-enabled GPU (optional, falls back to CPU if unavailable)
 
 1. Clone the repository:
 
-   git clone <repository-url>
+   git clone < repository-url >
    
-   cd <repository-directory>
+   cd < repository-directory >
 
 2. Install dependencies:
    
