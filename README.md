@@ -47,9 +47,13 @@ The script outputs training progress, final metrics, and saves a visualization t
 ## Code Structure
 
 The code is organized into the following components:
+
 1). Data Loading and Preprocessing:
+
     1. Loads input.txt and creates a character-level vocabulary.
+    
     2. Splits data into 90% training and 10% validation sets.
+    
     3. Implements get_batch for generating input-target pairs.
 
 
